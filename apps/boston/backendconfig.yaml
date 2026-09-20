@@ -1,0 +1,15 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: boston-backendconfig
+  namespace: boston
+spec:
+  timeoutSec: 30
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 5
+    healthyThreshold: 1
+    unhealthyThreshold: 2
+    type: HTTP
+    requestPath: /
+    port: 80

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: boston-html
+  namespace: boston
+data:
+  index.html: |
+    <!doctype html>
+    <html>
+      <head><title>Boston</title></head>
+      <body style="font-family: system-ui; text-align: center; padding-top: 12vh;">
+        <h1 style="font-size: 4rem; margin: 0;">BOSTON</h1>
+        <p>Served from GKE &middot; deployed by Argo CD</p>
+      </body>
+    </html>

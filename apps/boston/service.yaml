@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: boston
+  namespace: boston
+  annotations:
+    # Container-native load balancing: the LB talks straight to Pod IPs (NEGs),
+    # skipping the kube-proxy hop. Recommended on GKE.
+    cloud.google.com/neg: '{"ingress": true}'
+    cloud.google.com/backend-config: '{"default": "boston-backendconfig"}'
+spec:
+  type: ClusterIP   # ClusterIP is enough when NEG is on; use NodePort if you disable NEG
+  selector:
+    app: boston
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP

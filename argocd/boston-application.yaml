@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: boston
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR-USER/gke-boston-argocd.git   # <-- change me
+    targetRevision: main
+    path: apps/boston
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: boston
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m
+  # The GCE Ingress controller writes status.loadBalancer back onto the Ingress,
+  # and BackendConfig health values get defaulted server-side. Ignore that churn
+  # so Argo CD does not sit permanently "OutOfSync".
+  ignoreDifferences:
+    - group: networking.k8s.io
+      kind: Ingress
+      jsonPointers:
+        - /status

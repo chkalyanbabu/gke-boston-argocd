@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: boston-ingress
+  namespace: boston
+  annotations:
+    kubernetes.io/ingress.class: "gce"                     # external Application Load Balancer
+    kubernetes.io/ingress.global-static-ip-name: "boston-ip"  # reserved in Step 2
+    # Uncomment once you have a managed cert (see Step 9):
+    # networking.gke.io/managed-certificates: "boston-cert"
+    # kubernetes.io/ingress.allow-http: "true"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: boston
+                port:
+                  number: 80
